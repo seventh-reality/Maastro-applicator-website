@@ -9,6 +9,27 @@
   <script src="https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.js" defer></script>
 
   <style>
+    body, html { margin: 0; padding: 0; font-family: sans-serif; background: #fff; }
+    #welcome-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+    #start-button {
+      padding: 12px 24px;
+      background: #333;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
     h5 { text-align: center; margin-top: -5px; font-size: 9px; color: #636363; }
     .attributiontwo { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; }
     .attributiontwo span { display: flex; flex-wrap: nowrap; justify-content: center; }
@@ -42,11 +63,17 @@
 
 <body>
 
+<!-- Welcome screen to initialize audio -->
+<div id="welcome-overlay">
+  <h2>Welcome to Varian 4D Experience</h2>
+  <button id="start-button">Start Experience</button>
+</div>
+
 <!-- Hidden Audio Elements -->
-<audio id="intro-audio" src="intro.mp3" autoplay playsinline></audio>
+<audio id="intro-audio" src="intro.mp3" playsinline></audio>
 <audio id="bg-audio" src="BG.mp3" playsinline></audio>
 
-<div id="card">
+<div id="card" style="display: none;">
   <model-viewer 
     id="model"
     src="Maastro.glb" 
@@ -75,7 +102,6 @@
     <div id="ar-prompt">
       <img src="ar_hand_prompt.png">
     </div>
-
   </model-viewer>
 
   <section class="attributiontwo">
@@ -96,34 +122,31 @@
   </section>
 </div>
 
-<!-- Model Viewer and Custom Scripts -->
+<!-- Model Viewer -->
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
 
 <script>
   const introAudio = document.getElementById('intro-audio');
   const bgAudio = document.getElementById('bg-audio');
   const arButton = document.getElementById('ar-button');
+  const startButton = document.getElementById('start-button');
+  const welcomeOverlay = document.getElementById('welcome-overlay');
+  const card = document.getElementById('card');
 
-  introAudio.loop = false;
-  bgAudio.loop = false;
-
-  // Play intro only after user interaction (first tap anywhere)
   let audioInitialized = false;
-  function initAudio() {
-    if (!audioInitialized) {
-      introAudio.play().catch(e => {
-        console.warn('Intro audio blocked by browser:', e);
-      });
-      audioInitialized = true;
-      document.removeEventListener('touchstart', initAudio);
-      document.removeEventListener('click', initAudio);
-    }
-  }
 
-  document.addEventListener('touchstart', initAudio);
-  document.addEventListener('click', initAudio);
+  startButton.addEventListener('click', () => {
+    // Ensure both audio are preloaded and authorized by interaction
+    introAudio.play().catch(e => console.warn('Intro audio error:', e));
+    introAudio.loop = false;
 
-  // Switch to BG audio on AR button click
+    // Show 3D viewer content
+    welcomeOverlay.style.display = 'none';
+    card.style.display = 'block';
+
+    audioInitialized = true;
+  });
+
   arButton.addEventListener('click', () => {
     if (!introAudio.paused) {
       introAudio.pause();
@@ -132,9 +155,9 @@
     bgAudio.play().catch(e => {
       console.warn('BG audio play error:', e);
     });
+    bgAudio.loop = true;
   });
 </script>
-
 
 </body>
 </html>
