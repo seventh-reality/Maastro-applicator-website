@@ -24,7 +24,7 @@
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "rb8f137aiv");
@@ -41,6 +41,10 @@
 </head>
 
 <body>
+
+<!-- Hidden Audio Elements -->
+<audio id="intro-audio" src="intro.mp3" autoplay playsinline></audio>
+<audio id="bg-audio" src="BG.mp3" playsinline></audio>
 
 <div id="card">
   <model-viewer 
@@ -92,10 +96,36 @@
   </section>
 </div>
 
-
-<!-- Scripts -->
-<script src="script.js"></script>
+<!-- Model Viewer and Custom Scripts -->
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+
+<script>
+  const introAudio = document.getElementById('intro-audio');
+  const bgAudio = document.getElementById('bg-audio');
+  const arButton = document.getElementById('ar-button');
+
+  // Ensure both audios play only once
+  introAudio.loop = false;
+  bgAudio.loop = false;
+
+  // Play intro on load
+  window.addEventListener('load', () => {
+    introAudio.play().catch(e => {
+      console.warn('Autoplay may be blocked by browser:', e);
+    });
+  });
+
+  // When AR button is clicked, switch audio
+  arButton.addEventListener('click', () => {
+    if (!introAudio.paused) {
+      introAudio.pause();
+      introAudio.currentTime = 0;
+    }
+    bgAudio.play().catch(e => {
+      console.warn('Could not play background audio:', e);
+    });
+  });
+</script>
 
 </body>
 </html>
