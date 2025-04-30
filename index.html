@@ -39,8 +39,6 @@
 </head>
 
 <body>
-
-<audio id="intro-audio" src="intro.mp3" autoplay playsinline></audio>
 <audio id="bg-audio" src="BG.mp3" playsinline></audio>
 
 <div id="card">
@@ -128,7 +126,7 @@
       bgAudio.play().catch(e => {
         console.warn('BG audio play error:', e);
       });
-    }, 8000); // Adjust the delay (in milliseconds) if needed
+    }, 200); // Adjust the delay (in milliseconds) if needed
   });
 </script>
 
