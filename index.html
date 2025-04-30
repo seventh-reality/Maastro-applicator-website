@@ -104,28 +104,37 @@
   const bgAudio = document.getElementById('bg-audio');
   const arButton = document.getElementById('ar-button');
 
-  // Ensure both audios play only once
   introAudio.loop = false;
   bgAudio.loop = false;
 
-  // Play intro on load
-  window.addEventListener('load', () => {
-    introAudio.play().catch(e => {
-      console.warn('Autoplay may be blocked by browser:', e);
-    });
-  });
+  // Play intro only after user interaction (first tap anywhere)
+  let audioInitialized = false;
+  function initAudio() {
+    if (!audioInitialized) {
+      introAudio.play().catch(e => {
+        console.warn('Intro audio blocked by browser:', e);
+      });
+      audioInitialized = true;
+      document.removeEventListener('touchstart', initAudio);
+      document.removeEventListener('click', initAudio);
+    }
+  }
 
-  // When AR button is clicked, switch audio
+  document.addEventListener('touchstart', initAudio);
+  document.addEventListener('click', initAudio);
+
+  // Switch to BG audio on AR button click
   arButton.addEventListener('click', () => {
     if (!introAudio.paused) {
       introAudio.pause();
       introAudio.currentTime = 0;
     }
     bgAudio.play().catch(e => {
-      console.warn('Could not play background audio:', e);
+      console.warn('BG audio play error:', e);
     });
   });
 </script>
+
 
 </body>
 </html>
