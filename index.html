@@ -92,95 +92,10 @@
   </section>
 </div>
 
-<!-- Background Music -->
-<audio id="intro-audio" src="intro.mp3" preload="auto"></audio>    
-<audio id="bg-music" src="BG.mp3" muted preload="auto"></audio>
-
 
 <!-- Scripts -->
 <script src="script.js"></script>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
-
-<script>
-  const bgMusic = document.getElementById('bg-music');
-  const introAudio = document.getElementById('intro-audio');
-  const modelViewer = document.getElementById('model');
-  const arButton = document.getElementById('ar-button');
-
-  // Unlock audio on first user interaction
-  function unlockAudio() {
-    bgMusic.muted = false;
-    introAudio.muted = false;
-
-    bgMusic.play().then(() => {
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
-    }).catch(e => console.log('BG unlock error:', e));
-
-    introAudio.play().then(() => {
-      introAudio.pause();
-      introAudio.currentTime = 0;
-    }).catch(e => console.log('Intro unlock error:', e));
-
-    document.removeEventListener('click', unlockAudio);
-    document.removeEventListener('touchstart', unlockAudio);
-  }
-
-  document.addEventListener('click', unlockAudio);
-  document.addEventListener('touchstart', unlockAudio);
-
-  // Play intro on model interaction
-  modelViewer.addEventListener('touchstart', () => {
-    gtag('event', 'model_touched', {
-      event_category: '3D Model',
-      event_label: 'User touched model',
-      value: 1
-    });
-
-    introAudio.currentTime = 0;
-    introAudio.play().catch(err => console.log('Intro play error:', err));
-  });
-
-  modelViewer.addEventListener('click', () => {
-    gtag('event', 'model_clicked', {
-      event_category: '3D Model',
-      event_label: 'User clicked on model',
-      value: 1
-    });
-
-    introAudio.currentTime = 0;
-    introAudio.play().catch(err => console.log('Intro play error:', err));
-  });
-
-  // Stop intro when AR starts
-  modelViewer.addEventListener('ar-status', (event) => {
-    if (event.detail.status === 'session-started') {
-      gtag('event', 'ar_session_started', {
-        event_category: 'AR',
-        event_label: 'AR View started'
-      });
-
-      // Stop intro audio
-      introAudio.pause();
-      introAudio.currentTime = 0;
-
-      // Start background music after 8 seconds
-      setTimeout(() => {
-        bgMusic.play().catch(err => console.log('BG play error:', err));
-      }, 8000);
-    }
-
-    if (event.detail.status === 'session-ended') {
-      gtag('event', 'ar_session_ended', {
-        event_category: 'AR',
-        event_label: 'AR View ended'
-      });
-
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
-    }
-  });
-</script>
 
 </body>
 </html>
