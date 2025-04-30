@@ -89,7 +89,28 @@
   </section>
 </div>
 
+<!-- Hidden audio element -->
+<audio id="bg-audio" src="BG.mp3" preload="auto" playsinline></audio>
+
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+
+<script>
+  // Play audio only once after first user interaction
+  const audio = document.getElementById("bg-audio");
+
+  function playAudioOnce() {
+    if (!audio.played.length) {
+      audio.play().catch(err => {
+        console.log("Autoplay failed:", err);
+      });
+    }
+    document.removeEventListener('click', playAudioOnce);
+    document.removeEventListener('touchstart', playAudioOnce);
+  }
+
+  document.addEventListener('click', playAudioOnce);
+  document.addEventListener('touchstart', playAudioOnce);
+</script>
 
 </body>
 </html>
