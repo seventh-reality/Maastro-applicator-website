@@ -39,9 +39,6 @@
 </head>
 
 <body>
-<audio id="bg-audio" src="intro1.mp3" playsinline></audio>
-<audio id="intro-audio" src="BG.mp3" autoplay playsinline></audio>
-
 <div id="card">
   <model-viewer
     id="model"
@@ -93,43 +90,6 @@
 </div>
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
-
-<script>
-  const introAudio = document.getElementById('intro-audio');
-  const bgAudio = document.getElementById('bg-audio');
-  const arButton = document.getElementById('ar-button');
-
-  introAudio.loop = false;
-  bgAudio.loop = false;
-
-  let audioInitialized = false;
-  function initAudio() {
-    if (!audioInitialized) {
-      introAudio.play().catch(e => {
-        console.warn('Intro audio blocked by browser:', e);
-      });
-      audioInitialized = true;
-      document.removeEventListener('touchstart', initAudio);
-      document.removeEventListener('click', initAudio);
-    }
-  }
-
-  document.addEventListener('touchstart', initAudio);
-  document.addEventListener('click', initAudio);
-
-  arButton.addEventListener('click', () => {
-    if (!introAudio.paused) {
-      introAudio.pause();
-      introAudio.currentTime = 0;
-    }
-    // Introduce a short delay before playing the background audio
-    setTimeout(() => {
-      bgAudio.play().catch(e => {
-        console.warn('BG audio play error:', e);
-      });
-    }, 8000); // Adjust the delay (in milliseconds) if needed
-  });
-</script>
 
 </body>
 </html>
